@@ -1,6 +1,8 @@
 package com.programming.techie;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ContactManagerTest {
@@ -50,6 +52,58 @@ class ContactManagerTest {
     }
 
     @Test
-    void getAllContacts() {
+    @DisplayName("Should create 1 contact on Linux")
+    @EnabledOnOs(value = OS.LINUX, disabledReason = "Enabled only on Linux")
+    void addContactLinux() {
+        contactManager.addContact("Adam", "Smith", "0987654321");
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertTrue(contactManager.getAllContacts().stream()
+                .anyMatch(contact -> contact.getFirstName().equals("Adam") &&
+                        contact.getLastName().equals("Smith") &&
+                        contact.getPhoneNumber().equals("0987654321"))
+        );
+    }
+
+    @Test
+    @DisplayName("Should create 1 contact on Windows")
+    @EnabledOnOs(value = OS.WINDOWS, disabledReason = "Enabled only on Windows")
+    void addContactWindows() {
+        contactManager.addContact("Adam", "Smith", "0987654321");
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertTrue(contactManager.getAllContacts().stream()
+                .anyMatch(contact -> contact.getFirstName().equals("Adam") &&
+                        contact.getLastName().equals("Smith") &&
+                        contact.getPhoneNumber().equals("0987654321"))
+        );
+    }
+
+    @Test
+    @DisplayName("Should create 1 contact on developer machine")
+    void addContactOnDev() {
+        Assumptions.assumeTrue("DEV".equals(System.getProperty("ENV")));
+        contactManager.addContact("Adam", "Smith", "0987654321");
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertTrue(contactManager.getAllContacts().stream()
+                .anyMatch(contact -> contact.getFirstName().equals("Adam") &&
+                        contact.getLastName().equals("Smith") &&
+                        contact.getPhoneNumber().equals("0987654321"))
+        );
+    }
+
+    @RepeatedTest(value = 5,
+            name = "Repeating add contact test {currentRepetition} of {totalRepetitions}")
+    @DisplayName("Should create 1 contact repeatedly")
+    void addContactRepeated() {
+        contactManager.addContact("Adam", "Smith", "0987654321");
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertTrue(contactManager.getAllContacts().stream()
+                .anyMatch(contact -> contact.getFirstName().equals("Adam") &&
+                        contact.getLastName().equals("Smith") &&
+                        contact.getPhoneNumber().equals("0987654321"))
+        );
     }
 }
