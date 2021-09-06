@@ -3,6 +3,14 @@ package com.programming.techie;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ContactManagerTest {
@@ -105,5 +113,45 @@ class ContactManagerTest {
                         contact.getLastName().equals("Smith") &&
                         contact.getPhoneNumber().equals("0987654321"))
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"0123456789", "0132457689", "0987654321"})
+    @DisplayName("Parameterized add contact test usingh value source")
+    void addContactParameterizedUsingValueSource(String phoneNumber) {
+        contactManager.addContact("Adam", "Smith", phoneNumber);
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getPhoneNumbersList")
+    @DisplayName("Parameterized add contact test using method source")
+    void addContactParameterizedUsingMethodSource(String phoneNumber) {
+        contactManager.addContact("Adam", "Smith", phoneNumber);
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"0123456789", "0132457689", "0987654321"})
+    @DisplayName("Parameterized add contact test using csv source")
+    void addContactParameterizedUsingCsvSource(String phoneNumber) {
+        contactManager.addContact("Adam", "Smith", phoneNumber);
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/data.csv")
+    @DisplayName("Parameterized add contact test using csv file source")
+    void addContactParameterizedUsingCsvFileSource(String phoneNumber) {
+        contactManager.addContact("Adam", "Smith", phoneNumber);
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    private static List<String> getPhoneNumbersList() {
+        return Arrays.asList("0123456789", "0132457689", "0987654321");
     }
 }
