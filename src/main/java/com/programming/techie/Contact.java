@@ -1,23 +1,16 @@
 package com.programming.techie;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class Contact {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-
-    public Contact(String firstName, String lastName, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
 
     public void validateFirstName() {
         if (this.firstName.isBlank())
@@ -33,7 +26,6 @@ public class Contact {
         if (this.phoneNumber.isBlank()) {
             throw new RuntimeException("Phone Name Cannot be null or empty");
         }
-
         if (this.phoneNumber.length() != 10) {
             throw new RuntimeException("Phone Number Should be 10 Digits Long");
         }
